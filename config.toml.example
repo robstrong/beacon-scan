@@ -1,0 +1,10 @@
+[[uuids]]
+    name = "Rob"
+    uuid = "c7ab0d46-1888-4aa4-a1c1-8f891368fd79"
+    deviceID = "rstrong_phone"
+    topic = "location/office"
+
+[ mqtt ]
+host = "localhost:1883"
+username = ""
+password = ""
