@@ -1,11 +1,16 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"math"
 )
 
+var configPath = flag.String("config", "config.toml", "path to config file")
+
 func main() {
+	flag.Parse()
+
 	//load config
 	c := loadConfig()
 

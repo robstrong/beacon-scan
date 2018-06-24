@@ -8,7 +8,7 @@ import (
 
 func loadConfig() Config {
 	c := Config{}
-	_, err := toml.DecodeFile("config.toml", &c)
+	_, err := toml.DecodeFile(*configPath, &c)
 	if err != nil {
 		log.Fatalf("error loading config file: %v", err)
 	}
