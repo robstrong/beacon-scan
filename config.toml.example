@@ -5,6 +5,6 @@
     topic = "location/office"
 
 [ mqtt ]
-host = "localhost:1883"
+host = "tcp://localhost:1883"
 username = ""
 password = ""

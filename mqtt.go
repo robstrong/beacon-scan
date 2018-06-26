@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -29,16 +30,19 @@ func mustMarshalJSON(p *payload) []byte {
 	return v
 }
 func getMQTTClient(config MQTTConfig) mqtt.Client {
+	log.Printf("connecting to MQTT at %s", config.Host)
 	opt := mqtt.NewClientOptions().
 		AddBroker(config.Host).
 		SetAutoReconnect(true).
 		SetCredentialsProvider(mqtt.CredentialsProvider(func() (string, string) {
 			return config.Username, config.Password
-		}))
+		})).
+		SetKeepAlive(2 * time.Second).
+		SetPingTimeout(1 * time.Second)
+
 	c := mqtt.NewClient(opt)
-	t := c.Connect()
-	if err := t.Error(); err != nil {
-		log.Fatalf("error connecting to mqtt broker: %v", err)
+	if token := c.Connect(); token.Wait() && token.Error() != nil {
+		panic(token.Error())
 	}
 	return c
 }

@@ -27,6 +27,7 @@ func main() {
 			payload := newPayload(u.DeviceID, u.Name, calculateDistance(d.RSSI, d.TxPower))
 			log.Printf("publishing to %s: %s\n", u.Topic, payload)
 			t := mq.Publish(u.Topic, 0, false, payload)
+			t.Wait()
 			if err := t.Error(); err != nil {
 				log.Printf("error publishing: %v", err)
 			}
