@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"sync"
 
 	"github.com/paypal/gatt"
 	"github.com/paypal/gatt/examples/option"
@@ -53,17 +52,14 @@ func (b *BLEScanner) onPeripheralDiscovered(p gatt.Peripheral, a *gatt.Advertise
 	if a.TxPowerLevel != 0 {
 		data.TxPower = a.TxPowerLevel
 	}
-	b.subscribersMu.RLock()
-	defer b.subscribersMu.RUnlock()
 	for _, s := range b.subscribers {
 		s(*data)
 	}
 }
 
 type BLEScanner struct {
-	device        gatt.Device
-	subscribers   []BeaconDiscovered
-	subscribersMu sync.RWMutex
+	device      gatt.Device
+	subscribers []BeaconDiscovered
 }
 
 func NewBLEScanner() *BLEScanner {
@@ -83,8 +79,7 @@ func (b *BLEScanner) Start() error {
 	select {}
 }
 
+//AddSubscribers does not allow new subscribers after Start has been called
 func (b *BLEScanner) AddSubscriber(fn BeaconDiscovered) {
-	b.subscribersMu.Lock()
 	b.subscribers = append(b.subscribers, fn)
-	b.subscribersMu.Unlock()
 }
