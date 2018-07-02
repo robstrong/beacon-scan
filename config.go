@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	"github.com/BurntSushi/toml"
 )
@@ -12,7 +13,7 @@ func loadConfig() Config {
 	if err != nil {
 		log.Fatalf("error loading config file: %v", err)
 	}
-	return c
+	return normalizeConfig(c)
 }
 
 type Config struct {
@@ -31,4 +32,11 @@ type MQTTConfig struct {
 	Host     string
 	Username string
 	Password string
+}
+
+func normalizeConfig(c Config) Config {
+	for i, t := range c.UUIDs {
+		c.UUIDs[i].UUID = strings.ToUpper(t.UUID)
+	}
+	return c
 }
